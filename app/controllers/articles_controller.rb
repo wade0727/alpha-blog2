@@ -7,11 +7,22 @@ class ArticlesController < ApplicationController
     # display whats being passed without sending to db
     # render plain: params[:article].inspect
     @article = Article.new(article_params)
-    @article.save
-    # redirect after create
-    redirect_to articles_show(@article)
+    if @article.save
+      flash[:notice] = "Article was created"
+      # redirect after create
+      redirect_to article_path(@article)
+    else
+      render 'new'
+    end
+
   end
 
+  def show
+    @article = Article.find(params[:id])
+  end
+
+
+  # whitelisting the article to database
   private
     def article_params
       params.require(:article).permit(:title, :description)
